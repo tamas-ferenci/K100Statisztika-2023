@@ -332,94 +332,91 @@ az olvasható le, hogy egy 1 kilogrammos embernek 1 méter megtételéhez
 mennyi energiára van szüksége adott meredekség mellett. Például 0
 meredekségnél – vízszintes út – ez 1.64
 $\frac{\text{J}}{\text{kg}\cdot\text{m}}$; vagy, kicsit épkézlábabb
-módon kifejezve: egy 70 kg-os embernek 1 km megtételéhez e szerint 27.4
-kcal-ra van szüksége. Nekünk azonban nem is ezek a számok lesznek az
-érdekesek, hanem az egymáshoz való viszonyuk! Ugyanis 10%-os emelkedőn
-ugyanez az érték 4.68 $\frac{\text{J}}{\text{kg}\cdot\text{m}}$. Tehát 1
-km energiaigénye vízszintesen 1640, de 10%-os emelkedőn 4680, amit úgy
-is kifejezhetünk, hogy a kettőt elosztjuk egymással, és azt mondjuk,
-hogy 1 km 10%-os emelkedőn ugyanannyi, mint 2.85 km vízszintesen!
-(Látható, hogy szerencsés módon nem számít, hogy hány kilogrammos az
-ember, és az sem, hogy hány kilométer távolságról beszélünk, hiszen
-ezeket osztjuk egymással, így ezek kiesnek az osztásnál.) Még másképp
-átfogalmazva ennél is közelebb kerülhetünk a korábbi stílusú
-állításokhoz: 100 méter emelkedő – a 10% meredekség 1 kilométeren az
-ennyi – egyenértékű 1.85 km plusz (vízszintes) távval!
+módon kifejezve: egy 70 kg-os embernek 1 km megtételéhez e szerint 114.8
+kJ-ra (hétköznapilag szokásosabb mértékegységben: 27.4 kcal) van
+szüksége. Nekünk azonban nem is ezek a számok lesznek az érdekesek,
+hanem az egymáshoz való viszonyuk! Ugyanis 10%-os emelkedőn ugyanez az
+érték Minetti adatai szerint 4.68
+$\frac{\text{J}}{\text{kg}\cdot\text{m}}$. Tehát 1 km energiaigénye –
+maradva 70 kg-os embernél – vízszintesen $1000\cdot70\cdot 1.64$ kJ, de
+10%-os emelkedőn már $1000\cdot70\cdot 4.68$ kJ, azaz
+$1000\cdot70\cdot 4.68 - 1000\cdot70\cdot 1.64$ kJ-lal több. És most jön
+a lényeg: ezt a többletet átszámolhatjuk vízszintes távolságra! Hiszen
+vízszintesen minden kilométer $1000\cdot70\cdot 1.64$ kJ, azaz
+$1000\cdot70\cdot 4.68 - 1000\cdot70\cdot 1.64$ kJ többlet az épp
+$\frac{1000\cdot70\cdot 4.68 - 1000\cdot70\cdot 1.64}{1000\cdot70\cdot 1.64}$
+vízszintes kilométerrel egyenértékű! A számolásból ráadásul az is
+látszik, hogy ez az eredmény szerencsére nem függ attól, hogy milyen
+távolsággal, és milyen tömegű emberrel számoltunk, tehát valóban egy
+állandó; az értéke $\frac{4.68}{1.64} -1 = 1.85$ kilométer.
 
-(Felmerülhet a kérdés, hogy számít-e, hogy a fentiekben 1 km-rel és
-10%-os emelkedővel végeztük a kalkulációt. Ha például 2 km-t veszünk
-szintén 10%-os emelkedőn, akkor az 5.71 km vízszintes távval lesz
-egyenértékű, azaz 3.71 km plusz-távot jelent a szint. Igen ám, de ebben
-200 m lesz ez a szint, tehát a 100 m-re hozzáadandó táv ugyanúgy 1.85
-km. És ha 1 km-t megyünk, de csak 5%-os emelkedővel? Ekkor 1.93 km
-vízszintes távval, azaz 0.93 km plusz-távval lesz egyenértékű a szint,
-de ez a szint itt csak 50 m, így a 100 m utána hozzáadandó szint megint
-csak 1.85 km. Véletlen volt a dolog? Nem, egyáltalán nem, de fontos
-hangsúlyozni, hogy ez egy dolgon múlt: a linearitáson, tehát azon, hogy
-a fenti energiaigény-meredekség görbét egyenesnek vettük a vizsgált
-meredekségek tartományában. Ez esetben valóban igaz, hogy állandó lesz
-az az érték, hogy minden 100 m szintemelkedés után mennyit kell
-hozzáadni. Fontos azonban, hogy csak emiatt van akkora szerencsénk, hogy
-így leegyszerűsödik a helyzet, általában ez nem feltétlenül igaz. A
-probléma az, hogy igazából a „10%-os emelkedőn megyünk 1 km-t” és az „1
-km-t megyünk, közben 100 m-t emelkedve” egyáltalán nem ugyanaz: az
-utóbbit megtehetjük úgy is, hogy előbb fél kilométert megyünk 20%-os
-emelkedőn, aztán vízszintesen még fél kilométert. Vagy épp 100 métert
-100%-os emelkedőn és utána vízszintesen. Az, hogy ezen lehetőségek
-mindegyikére kiszámolva az energiafelhasználást – vájtfülűek kedvért: ez
-igazából egy integrálást jelent – pont ugyanazt kapjuk, csak és
-kizárólag azért van, mert a fenti görbe lineáris. De ha az, akkor
-ugyanazt kapjuk, és így használhatjuk a naismith-i egyszerűsítést, tehát
-lehet olyat mondani, hogy minden 100 méter szint adott vízszintes úttal
-egyenértékű. Márpedig a fenti ábra azt mutatja, hogy 35%-ig tényleg
-szinte tökéletesen lineáris a görbe; akár azt is megtehetnénk, hogy arra
-az egész szakaszra illesztünk egy egyenest. Nagy jelentősége nincs a
-dolognak, azért használtam mégis kizárólag a 0% és 10% pontokat, mert a
-legtöbb teljesítménytúra nemhogy összességében, de még meredek részeiben
-is ezen a tartományon van; a 35% pedig végképp teljesen távol esik a
-reális tartománytól. A Pisztrángos-tó – Sötét-lápa nyereg – Kékestető,
-egy legendás teljesítménytúra legendás szakasza, 12,5% átlagos
-meredekségű, a Gerecse 50-en a Héreg sarkától a Z-ön felmenetel 11,4%, a
-Kiss Péter Emléktúrán a Markazi-vár – Kis-kő meredek része 16,4%, de ez
-már tényleg a legextrémebb példák közé tartozik a magyar
-teljesítménytúrák körében, legalábbis amivel én találkoztam.
-Valószínűleg tehát jobban járunk, ha csak a 0% és 10% adatait
-használjuk, a többi meg inkább csak azért jó, mert megerősít minket
-abban, hogy tényleg lineáris összefüggésről van szó. Sajnos itt kibukik
-Minetti vizsgálatának egy limitációja: pont a nekünk releváns
-tartományban nem túl jó a felbontása; nekünk jobb lett volna ha -10% és
-+10% között végzi a méréseinek a többségét.)
+És itt nincs vége a jó híreknek. Belátható, hogy ez nem csak 10%-os
+emelkedőre igaz, hanem úgy is elmondható, hogy akkor is, ha egy
+kilométeren 100 méter emelkedés van. (Ez nem nyilvánvaló állítás, mert a
+kettő nem ugyanaz: végig 10%-os emelkedő 1 kilométeren az tényleg 100
+méter emelkedés, de fordítva nem feltétlenül, 100 méter emelkedés nem
+biztos, hogy végig 10%-os emelkedőt jelent. Lehet, hogy előbb fél
+kilométert megyünk 20%-os emelkedőn, aztán vízszintesen még fél
+kilométert. Vagy épp 100 métert 100%-os emelkedőn és utána
+vízszintesen.) Min múlik a dolog? Azon, hogy az energiaigény és a
+meredekség közötti függvény egy egyenes volt. Ez esetben ugyanis
+szerecsénk van[^1] mert ilyenkor, ha ezen lehetőségek mindegyikére
+kiszámoljuk az energiafelhasználást, akkor pontosan ugyanazt az értéket
+kapjuk, így az ekvivalens vízszintes hossz is ugyanaz lesz. Mondhatjuk
+tehát, hogy ez ahhoz tartozik, hogy 100 méter emelkedést kellett
+leküzdenünk.
 
-Egy szó mint száz, Minetti adatai teljesen a Naismith-szabályhoz hasonló
-eredményre vezetnek, egy fontos különbséggel: sokkal jobban bünteti a
-meredekséget, hiszen 1.85 kilométert ad hozzá minden 100 méter emelkedés
-után, nem 1 kilométert.
+Ezzel tehát arra jutottunk, hogy Minetti adatai alapján, ha
+egyszerűsítünk és csak az emelkedést nézzük, akkor egy Naismith-szel
+teljesen analóg szabály fogalmazható meg: minden 100 méter emelkedés
+egyenértékű 1,85 kilométer plusz (vízszintes) távval. A forma tehát
+ugyanaz, csak ez sokkal jobban bünteti az emelkedést, mint a
+Naismith-szabály.
 
-Ez azonban még mindig egy egyszerűsített elemzés volt, hiszen csak a
-pozitív meredekséget néztük! Természetesen ha egy
-Naismith-szabályszerűséghez szeretnénk jutni, akkor csak ezt tehetjük,
-de így nem használtunk fel minden információt, amit Minettiék vizsgálata
-feltárt! Mi a helyzet a negatív tartománnyal, a lejtőkkel?
+Ez a dolog azonban már nem működik akkor, ha a negatív tartományba
+lépünk, tehát a lejtőket is számításba akarjuk venni. A fentiek alapján
+jól látható a probléma: ilyenkor már nem lesz egyenes a függvény, hiszen
+0-nál megtörik; ez végképp igaz akkor, ha -10% alá megyünk, hiszen
+ilyenkor már vissza is fordul a függvény.
 
-Kézi számításra alkalmas, egyszerű szabályt is kaphatunk, ha itt is
-megszorítjuk magunkat az első, -10%-ig tartó szakaszra: ekkor azt
-mondhatjuk, hogy minden 100 méter süllyedés után vonjunk le 0.51 km-t a
-távolságból.
+Ha csak a 0 és -10% közötti szakaszt nézzük, akkor még menthetjük azzal
+a helyzetet, hogy egy *másik* egyenest használunk. Ez még kézi
+számolásra alkalmas lesz, hiszen ilyenkor kettéválasztottuk a problémát,
+így az történik, hogy bejön még egy szám: azzal kell kiegészítenünk a
+szabályt, hogy minden 100 méter süllyedés után vonjunk le 0.51
+kilométert a távolságból. A valóságban azonban már ez sem lesz
+feltétlenül praktikus, hiszen a süllyedésről sokszor nem adnak
+információt az itinerek; ez végképp igaz akkor, ha -10% alatt értékeket
+is akarunk nézni. Ehhez mindenképp valamilyen számítógépes térképre lesz
+szükségünk; akkor viszont már számolhatunk teljesen pontosan is,
+mindenféle közelítés nélkül, a fenti görbét véve alapul[^2].
 
-De ha nem kézzel számolunk, akkor éppenséggel felhasználhatjuk az egész
-fenti görbét is (lineárisan interpolálva a pontok között). Így dolgozva
-figyelembe vesszük a $\pm 10$%-on kívüli meredekségeket is, ideértve a
-túl nagy lejtő rontó hatását is. Az egyedüli nehézség, hogy ilyenkor a
-túra itinere már nem használható, nem csak azért, mert a süllyedések
-sokszor nincsenek feltüntetve, a K 100 hivatalos itinerében sem, hanem
-azért sem, mert többé már nem vagyunk lineárisak, ezért nem lehet egyben
-kezelni nagy szakaszokat, apró lépésekben kell végigmenni az egész
-útvonalon, és számolni az energiafelhasználást. De ha letöltjük a túra
-útvonalát például [GPX
+Felvetődhet a kérdés, hogy mennyire jelent nagy problémát a kézi
+számolásra egyszerűsített szabály alkalmazása, tehát mi a
+teljesítménytúrák releváns meredekség-tartománya? Pozitív tartományban
+valószínűleg a 0-10% tartománnyal sem hibázunk nagyot, az meg, hogy a
+35%-ig tartó nagyon pontosan egyenes tartományból, pláne, hogy a 45%-ig
+megadott teljes tartományból kifussunk, szinte elképzelhetetlen –
+nemhogy a teljesítménytúrák összességében, de még meredek részeikben is.
+A Pisztrángos-tó – Sötét-lápa nyereg – Kékestető, egy legendás
+teljesítménytúra legendás szakasza, 12,5% átlagos meredekségű, a Gerecse
+50-en a Héreg sarkától a Z-ön felmenetel 11,4%, a Kiss Péter Emléktúrán
+a Markazi-vár – Kis-kő meredek része 16,4%, de ez már tényleg a
+legextrémebb példák közé tartozik a magyar teljesítménytúrák körében,
+legalábbis amivel én találkoztam. A negatív meredekség-tartományról
+nehezebb így információt szerezni, de itt alkalmazhatunk egy másik
+megközelítést, ami egyébként is szerencsésebb lehet: az előbbi példák
+arra vannak korlátozva, hogy az itinerben milyen pontok szerepelnek (az
+alapján számoltam ki én is a közölt meredekségeket), de ha van
+számítógépes térképünk, akkor ezt kiszámolhatjuk szinte tetszőlegesen
+sűrűn! És akkor tegyük meg ezt a Kinizsi 100-ra, hiszen így még
+relevánsabbak leszünk: épp a vizsgált túrára nézzük meg az előforduló
+meredekségeket.
+
+Szerencsére a túra útvonalát letölthetjük [GPX
 formátumban](https://funiq.hu/3216-kinizsi-sz%C3%A1zas-teljes%C3%ADtm%C3%A9nyt%C3%BAra)
 (ez 2019-es dátumú, de az útvonal megegyezik a 2023-assal, beleértve azt
-is, hogy Tokodnál a K+-en megy, ami 2022-ben nem így volt), akkor ez nem
-okoz problémát gépi úton:
+is, hogy Tokodnál a K+-en megy, ami 2022-ben nem így volt):
 
 ``` r
 K100gpx <- gpx::read_gpx("kinizsi-százas-teljesítménytúra.gpx")
@@ -431,10 +428,47 @@ K100gpxTrack$DIFFELEV <- c(NA, diff(K100gpxTrack$Elevation))
 K100gpxTrack$DISTANCE <- c(NA, geodist::geodist(K100gpxTrack[, .(Longitude, Latitude)], sequential = TRUE))
 K100gpxTrack <- K100gpxTrack[!(!is.na(DISTANCE)&DISTANCE==0&DIFFELEV==0)]
 K100gpxTrack$SLOPE <- K100gpxTrack$DIFFELEV/K100gpxTrack$DISTANCE
-K100gpxTrack$CUMDIST <- c(NA, cumsum(K100gpxTrack$DISTANCE[-1]))
-K100gpxTrack$CUMPOSELEV <- c(NA, cumsum(pmax(K100gpxTrack$DIFFELEV[-1], 0)))
+K100gpxTrack$CUMDIST <- c(0, cumsum(K100gpxTrack$DISTANCE[-1]))
+K100gpxTrack$CUMPOSELEV <- c(0, cumsum(pmax(K100gpxTrack$DIFFELEV[-1], 0)))
 K100gpxTrack$Cw <- MinettiFun(K100gpxTrack$SLOPE)*K100gpxTrack$DISTANCE
+```
 
+A meredekségek számításához nem ez lesz a szerencsés adatbázis, mert
+vannak nagyon rövid szakaszok is, amin hatalmas szórása lesz a
+meredekségeknek (ha 1 méteren 1 métert haladunk felfelé, az elvileg
+100%-os meredekség). Éppen ezért célszerű lehet először – egyszerű
+interpolációval – mondjuk 100 méteres szakaszokra átszámolni a távolság
+és magasság adatokat, majd ez alapján számolni meredekségeket:
+
+``` r
+K100gpxTrack100MInterp <- with(approx(K100gpxTrack$CUMDIST, K100gpxTrack$Elevation,
+                                      seq(0, max(K100gpxTrack$CUMDIST, na.rm = TRUE), 100)),
+                               data.table(CUMDIST = x/1000, ELEVATION = y, SLOPE = c(NA, diff(y)/100*100)))
+```
+
+Az így kapott értékek már szépen ábrázolhatóak:
+
+``` r
+ggplot(K100gpxTrack100MInterp, aes(x = SLOPE)) + geom_histogram(bins = 30) +
+  geom_vline(xintercept = 0, color = "red") + labs(x = "Meredekség [%]", y = "Gyakoriság [db]")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+Látható, hogy a meredekségek még egy túrán belül nézve is (és elég
+finom, 100 méteres felbontásban haladva is) szinte kivétel nélkül -20%
+és +20% között vannak. Azt várjuk tehát, hogy az egyszerűsített szabály
+sem fog túl nagy hibát véteni: a pozitív tartományra tökéletesen
+működik, a negatívat ugyan figyelmen kívül hagyja, ezért valamelyest
+felülbecsült értéket, túl nagy egyenértékű távolságot fog adni, de ez a
+hatás vélhetően nem lesz túl nagy, hiszen 0 és -20% között a Minettiék
+által megadott függvény közel van a vízszinteshez.
+
+Úgyhogy akkor számoljunk! Innentől, hogy betöltöttük a térképet, már nem
+okoz problémát, hogy gépi úton menjünk végig a túra útvonalán, és
+lépésről-lépésre, pontosan számoljuk az energiafelhasználást:
+
+``` r
 truekms <- res[, .(TRUEKM = sort(unique(TRUEKM))), .(YEAR)]
 CwEkvs <- rbindlist(lapply(unique(truekms$YEAR), function(year) {
   idxs <- rep(sort(unique(res[YEAR==year]$KM))[-1],
@@ -487,7 +521,7 @@ ggplot(melt(res[, .(YEAR, TRUEKM, `Naismith` = SPEEDEFFORT,
   labs(x = "Táv [km]", y = "Korrigált sebesség [km-effort/h]", color = "Év", linetype = "Módszer")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 Azt látjuk, hogy az összkép a Minetti-módszerrel számolva is nagyon
 hasonló ahhoz, amit a Naismith-szabállyal kaptunk, csak épp magasabb
@@ -525,7 +559,7 @@ ggplot(melt(linfit, id.vars = "ID"), aes(x = value)) +
   labs(x = "", y = "Gyakoriság [fő]")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 Jól látszik a kezdőérték eloszlása, és az, hogy az abszolút túlnyomó
 többségnek tényleg csökkenő trendet mutatott a (korrigált) sebessége a
@@ -549,7 +583,7 @@ ggplot(resEffortWide[YEAR==2023], aes(x = `SPEEDEFFORT0-15`, y = `SPEEDEFFORT15-
   geom_abline(color = "red")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 Jól látszik, hogy a két szakaszon mért sebesség között nagyon szoros,
 pozitív – és szinte lineáris – volt a kapcsolat: aki az egyiken gyorsabb
@@ -568,7 +602,7 @@ GGally::ggpairs(temp, columnLabels = substring(colnames(temp), 12),
                 upper = list(continuous = GGally::wrap(GGally::ggally_cor, stars = FALSE)))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 Összességében tehát elmondható, hogy aki egy szakaszt az átlagnál
 gyorsabban teljesít, az valószínűleg bármely más szakaszt is az átlagnál
@@ -594,7 +628,7 @@ ggplot(resEffortWide[YEAR==2023], aes(x = `SPEEDEFFORT0-15`, y = as.numeric(SUCC
   labs(y = "Sikeres teljesítés valószínűsége [%]")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 A dolog egyfelől logikus, de talán azért kicsit meglepő is. Logikus,
 mert azt látjuk, hogy aki gyorsabban ment, az nagyobb valószínűséggel
@@ -629,7 +663,7 @@ ggplot(resEffortWide, aes(x = `SPEEDEFFORT0-15`, y = as.numeric(SUCCESS),
   labs(y = "Sikeres teljesítés valószínűsége [%]", color = "Év")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 Adná magát a kérdés, hogy miért nem nézünk meg további szakaszokat,
 vagy, ami még jobb, további szakaszokat *is*, azaz, miért nem becsüljük
@@ -667,3 +701,50 @@ hogy megengedjem a sebesség esetleges nemlineáris hatását.)
 
 Köszönöm Padisák Gábornak, hogy felhívta a figyelmemet a
 Minetti-módszerre.
+
+[^1]: A dolog tehát azon múlik, hogy lineárisnak feltételeztük az
+    összefüggést a meredekség és az energiafelhasználás között. (A
+    linearitás most egyértelmű, mivel csak két pontot, a 0%-osat és a
+    10%-osat használtuk fel.) A számítás általában igazából egy
+    integrálás, vagy diszkrét esetben egy szummázás, ahol minden kis
+    szakaszra összeszorozzuk a meredekségéből fakadó
+    energiafelhasználást a hosszával, és ezeket a szorzatokat
+    összeadjuk: $E = \sum_i f\left(s_i\right) \Delta l_i$, ahol $s_i$ az
+    $i$-edik szakasz meredeksége, $\Delta l_i$ pedig a hossza; $f$ a
+    energiafelhasználást leíró függvény. Ha ez utóbbi lineáris, azaz
+    $f\left(x\right) = a + b\cdot x$, akkor
+    $E = \sum_i \left(a + b \cdot s_i \right) \Delta l_i = a \sum_i \Delta l_i + b \sum_i s_i \Delta l_i = al + be$,
+    ahol $l$ a szakasz teljes hossza, $e$ pedig a teljes emelkedése.
+    Azaz az egységnyi hosszra jutó energiafelhasználás:
+    $\frac{E}{l} = a + b s$, ahol $s$ az átlagos meredekség; és ez jól
+    láthatóan független attól, hogy a szintemelkedés hogy oszlik meg,
+    csak az számít, hogy mi az átlagos meredekség. Ebből még egy fontos
+    dolog következik: valójában a szöveg kicsit csalt, mert abban a
+    pillanatban, hogy 20%-os emelkedőt emlegetett, már nem lehetett
+    volna pusztán a két pontból fakadó, 0 és 10% közti linearitásra
+    hivatkozni. Szerencsére a görbe, az ábrán is jól látható módon,
+    minimum 35%-ig nagyon pontosan lineáris. Mindez azért teszi végképp
+    kényelmessé az interpretációt, mert ha nem 1, hanem mondjuk 2
+    kilométeren van 100 méter szintemelkedés, akkor is mondhatjuk, hogy
+    átrendezzük úgy, hogy az első 1 kilométeren legyen – márpedig ahhoz
+    1,85 kilométer ekvivalens vízszintes táv tartozik. Tehát innentől
+    mindegy is a távolság, joggal mondhatjuk, hogy a 100 méter
+    emelkedéshez magához tartozik a plusz 1,85 kilométer egyenértékű
+    távolság, függetlenül attól, hogy 100 méteren vagy 100 kilométeren
+    van az a 100 méter emelkedés. Természetesen mindez csak addig igaz,
+    amíg az energiaigény-függvény lineáris minden felmerülő emelkedésre.
+
+[^2]: Sajnos itt kibukik Minetti vizsgálatának egy limitációja: pont a
+    nekünk releváns tartományban nem túl jó a felbontása; nekünk jobb
+    lett volna ha -10% és +10%, esetleg -20% és +20% között végzi a
+    méréseinek a többségét, teljesítménytúráknál ez a reális tartomány.
+    Jobb híján lineárisan interpolálhatunk a Minetti által közölt pontok
+    között. És akkor mit tegyünk, ha kimegyünk a tartományból, tehát nem
+    inter- hanem extrapolálnunk kellene? Bár Minetti az eredeti
+    közleményében megadott egy függvényt, amivel elvileg lehet
+    extrapolálni, nekem ezzel nagyon komoly fenntartásaim vannak: ez egy
+    ötödfokú polinom, ami elég túlilleszkedés-érzékenynek tűnik ilyen
+    kevés pontra illesztve. A jelek szerint az irodalom is [ezt
+    találta](https://journals.physiology.org/doi/full/10.1152/japplphysiol.00546.2015).
+    A dolognak azonban szinte semmi jelentősége, mert ilyen, 45%-nál
+    nagyobb meredekségek úgysem igen fordulnak elő, pláne hosszabban.
