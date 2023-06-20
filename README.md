@@ -55,18 +55,16 @@ if(!file.exists("K100res-2023.rds")) {
 res[, TIME2 := as.numeric(hms::parse_hm(TIME)-hms::parse_hm(TIME)[1]), .(ID)]
 res$TIME2 <- ifelse(res$TIME2>=0, res$TIME2, res$TIME2 + 24*60*60)
 
-res <- merge(res, data.table(KM = c(0, 15, 25, 40, 50, 55, 70, 80, 90, 100),
-                             TRUEKM = c(0, 14.15, 26.11, 42.28, 50.86, 55.8,
-                                        71.23, 82.12, 91.31, 98.37)), sort = FALSE)
-res <- merge(res, data.table(KM = c(0, 15, 25, 40, 50, 55, 70, 80, 90, 100),
-                             TRUEASCENT = c(0, 705, 1090-705, 1519-1090, 1830-1519,
-                                            2011-1830, 2621-2011, 2752-2621, 3107-2752,
-                                            3117-3107)), sort = FALSE)
+K100Data2023 <- data.table(KM = c(0, 15, 25, 40, 50, 55, 70, 80, 90, 100),
+                           TRUEKM = c(0, 14.15, 26.11, 42.28, 50.86, 55.8,
+                                      71.23, 82.12, 91.31, 98.37),
+                           TRUEASCENT = c(0, 705, 1090-705, 1519-1090, 1830-1519,
+                                          2011-1830, 2621-2011, 2752-2621, 3107-2752,
+                                          3117-3107),
+                           KMTEXT = c("0", "0-15", "15-25", "25-40", "40-50",
+                                      "50-55", "55-70", "70-80", "80-90", "90-100"))
 
-res <- merge(res, data.table(KM = c(0, 15, 25, 40, 50, 55, 70, 80, 90, 100),
-                             KMTEXT = c("0", "0-15", "15-25", "25-40", "40-50",
-                                        "50-55", "55-70", "70-80", "80-90", "90-100")),
-             sort = FALSE)
+res <- merge(res, K100Data2023, by = "KM", sort = FALSE)
 
 res[, KMDIFF := c(NA, diff(TRUEKM)), .(ID)]
 res[, TIMEDIFF := c(NA, diff(TIME2)), .(ID)]
@@ -298,26 +296,29 @@ különböző sebességek közül vegyük a minimumot, mondjuk, hogy ez az
 egyszerű: miért nehezebb felfelé menni, miért haladunk lassabban? Azért,
 mert több energiát igényel. Akkor mérjük ezt konkrétan is le az előbbi
 módszerrel! Ha ugyanis ez megvan, akkor kiszámolhatjuk „energetikailag”
-a szint hatását: hány kilométer többlet-távval egyenértékű 100 méter
-szint? Annyival, amennyi ugyanannyi energiát igényel! És kész, meg is
-vagyunk.
+a szint hatását: hány kilométer vízszintes többlet-távval egyenértékű
+100 méter szint? Annyival, amennyi ugyanannyi energiát igényel! És kész,
+meg is vagyunk.
 
 Alberto Minetti és munkatársai egy [2002-es
 cikkükben](https://journals.physiology.org/doi/full/10.1152/japplphysiol.01177.2001)
 elvégezték ezt a mérést, és az alábbi eredményt kapták:
 
 ``` r
-MinettiData <- data.table(SLOPE = c(-0.45, -0.40, -0.35, (-3:3)/10, 0.35, 0.40, 0.45),
-                          MinCw = c(3.46, 3.23, 2.65, 2.18, 1.30, 0.81, 1.64, 4.68, 8.07, 11.29, 12.72,
-                                    14.75, 17.33),
-                          MinCwSD = c(0.95, 0.59, 0.68, 0.67, 0.48, 0.37, 0.50, 0.34, 0.57, 1.14, 0.76,
-                                      0.61, 1.11))
-MinettiFun <- approxfun(MinettiData$SLOPE, MinettiData$MinCw, rule = 2)
-MinettiFit <- lm(MinCw ~ SLOPE, data = MinettiData[SLOPE>=0 & SLOPE<=0.35])
-MinettiData$lci <- MinettiData$MinCw - qt(0.975, 10-1)*MinettiData$MinCwSD/sqrt(10)
-MinettiData$uci <- MinettiData$MinCw + qt(0.975, 10-1)*MinettiData$MinCwSD/sqrt(10)
-ggplot(MinettiData, aes(x = SLOPE*100, y = MinCw, ymin = lci, ymax = uci)) + geom_line() + geom_point() +
-  geom_errorbar(width = 1) + labs(x = "Meredekség [%]", y = "Energiaigény [J/(kg m)]")
+EnergyData <- data.table(TYPE = "Minetti", SLOPE = c(-0.45, -0.40, -0.35, (-3:3)/10, 0.35, 0.40, 0.45),
+                         SPEED = NA,
+                         Cw = c(3.46, 3.23, 2.65, 2.18, 1.30, 0.81, 1.64, 4.68, 8.07, 11.29, 12.72,
+                                14.75, 17.33),
+                         CwSD = c(0.95, 0.59, 0.68, 0.67, 0.48, 0.37, 0.50, 0.34, 0.57, 1.14, 0.76,
+                                  0.61, 1.11), lci = NA_real_, uci = NA_real_)
+MinettiFun <- approxfun(EnergyData[TYPE=="Minetti"]$SLOPE, EnergyData[TYPE=="Minetti"]$Cw, rule = 2)
+MinettiFit <- lm(Cw ~ SLOPE, data = EnergyData[TYPE=="Minetti"][SLOPE>=0 & SLOPE<=0.35])
+EnergyData[TYPE=="Minetti"]$lci <- EnergyData[TYPE=="Minetti"]$Cw -
+  qt(0.975, 10-1)*EnergyData[TYPE=="Minetti"]$CwSD/sqrt(10)
+EnergyData[TYPE=="Minetti"]$uci <- EnergyData[TYPE=="Minetti"]$Cw +
+  qt(0.975, 10-1)*EnergyData[TYPE=="Minetti"]$CwSD/sqrt(10)
+ggplot(EnergyData[TYPE=="Minetti"], aes(x = SLOPE*100, y = Cw, ymin = lci, ymax = uci)) + geom_line() +
+  geom_point() + geom_errorbar(width = 1) + labs(x = "Meredekség [%]", y = "Energiaigény [J/(kg m)]")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
@@ -369,7 +370,7 @@ leküzdenünk.
 Ezzel tehát arra jutottunk, hogy Minetti adatai alapján, ha
 egyszerűsítünk és csak az emelkedést nézzük, akkor egy Naismith-szel
 teljesen analóg szabály fogalmazható meg: minden 100 méter emelkedés
-egyenértékű 1,85 kilométer plusz (vízszintes) távval. A forma tehát
+egyenértékű 1.85 kilométer plusz (vízszintes) távval. A forma tehát
 ugyanaz, csak ez sokkal jobban bünteti az emelkedést, mint a
 Naismith-szabály.
 
@@ -386,32 +387,141 @@ számolásra alkalmas lesz, hiszen ilyenkor kettéválasztottuk a problémát,
 szabályt, hogy minden 100 méter süllyedés után vonjunk le 0.51
 kilométert a távolságból. A valóságban azonban már ez sem lesz
 feltétlenül praktikus, hiszen a süllyedésről sokszor nem adnak
-információt az itinerek; ez végképp igaz akkor, ha -10% alatt értékeket
-is akarunk nézni. Ehhez mindenképp valamilyen számítógépes térképre lesz
-szükségünk; akkor viszont már számolhatunk teljesen pontosan is,
+információt az itinerek; ez pláne igaz akkor, ha -10% alatt értékeket is
+külön akarnánk nézni. Ehhez mindenképp valamilyen számítógépes térképre
+lesz szükségünk; akkor viszont már számolhatunk teljesen pontosan is,
 mindenféle közelítés nélkül, a fenti görbét véve alapul[^2].
 
-Felvetődhet a kérdés, hogy mennyire jelent nagy problémát a kézi
-számolásra egyszerűsített szabály alkalmazása, tehát mi a
-teljesítménytúrák releváns meredekség-tartománya? Pozitív tartományban
-valószínűleg a 0-10% tartománnyal sem hibázunk nagyot, az meg, hogy a
-35%-ig tartó nagyon pontosan egyenes tartományból, pláne, hogy a 45%-ig
-megadott teljes tartományból kifussunk, szinte elképzelhetetlen –
-nemhogy a teljesítménytúrák összességében, de még meredek részeikben is.
-A Pisztrángos-tó – Sötét-lápa nyereg – Kékestető, egy legendás
-teljesítménytúra legendás szakasza, 12,5% átlagos meredekségű, a Gerecse
-50-en a Héreg sarkától a Z-ön felmenetel 11,4%, a Kiss Péter Emléktúrán
-a Markazi-vár – Kis-kő meredek része 16,4%, de ez már tényleg a
-legextrémebb példák közé tartozik a magyar teljesítménytúrák körében,
-legalábbis amivel én találkoztam. A negatív meredekség-tartományról
-nehezebb így információt szerezni, de itt alkalmazhatunk egy másik
-megközelítést, ami egyébként is szerencsésebb lehet: az előbbi példák
-arra vannak korlátozva, hogy az itinerben milyen pontok szerepelnek (az
-alapján számoltam ki én is a közölt meredekségeket), de ha van
-számítógépes térképünk, akkor ezt kiszámolhatjuk szinte tetszőlegesen
-sűrűn! És akkor tegyük meg ezt a Kinizsi 100-ra, hiszen így még
-relevánsabbak leszünk: épp a vizsgált túrára nézzük meg az előforduló
-meredekségeket.
+Zárásként megjegyzendő, hogy a Minetti-adatok problémája, hogy mindössze
+10 tesztalany mérései alapján vették fel (szerencsére az energiaigény
+szórásai nagyon kicsik voltak), valamint, hogy mindegyikük fiatal,
+versenysportoló férfi volt. Ez utóbbi talán nem akkora nagy baj mint
+elsőre tűnhet, ugyanis mi itt csak a *relatív* viszonyokat használtuk
+fel, nem az abszolút számokat. Tehát igen, lehet, sőt, biztos, hogy a
+nem profi sportolók energiaigénye más, hogy a nőké más, stb. de
+remélhetőleg nagyjából *ugyanannyira más* 10%-os emelkedőn, mint
+vízszintesen. Lehet, hogy kétszer annyi az energiaigény, de ez
+egyáltalán nem baj, ha minden meredekség mellett kétszer annyi. (Az
+egész görbe el van tolódva, felfelé vagy lefelé, de arányosan
+mindenhol.) Ha így van, akkor egyáltalán semmilyen hibát nem vétünk;
+valószínűleg persze nincs tökéletesen így, mert a görbe meredeksége is
+függhet valamennyire ezektől a tényezőktől, de a hiba mindenesetre így
+is bizonyosan sokkal kisebb, mintha az abszolút számokat használnánk
+fel.
+
+Talán ennél is fontosabb azonban az a kérdés, hogy miért pont ezt az egy
+tanulmányt használjuk fel? Mi van, ha más szerzők mást találtak, nem
+lenne jobb azokat használni? Vagy, ami még jobb, az összes eredményt
+együtt használni? (Orvosi területen ezt szokták
+[metaanalízisnek](https://www.medstat.hu/oktatas/azorvosimegismeresmodszertana/)
+nevezni.) De, egyértelműen jobb lenne, bár az érdekes az, hogy ilyen
+eredményből egyáltalán nincs sok az irodalomban (és még azok egy része
+is évtizedekkel ezelőtti, így akkori technológiát használó mérés).
+2019-ben Looney és mtsai közöltek egy [nagyon érdekes
+cikket](https://journals.lww.com/acsm-msse/Fulltext/2019/09000/Estimating_Energy_Expenditure_during_Level,.20.aspx),
+melyben lényegében a fenti feladatot valósították meg. Az eredeti
+célkitűzésük az volt, hogy a hadsereg számára [hozzanak
+létre](https://journals.lww.com/acsm-msse/Fulltext/2019/02000/Metabolic_Costs_of_Standing_and_Walking_in_Healthy.16.aspx)
+egy modellt a vízszintes gyaloglási sebesség és az energiafelhasználás
+összefüggésére vonatkozóan, ez lett az LCDA (Load Carriage Decision Aid,
+kb. teherhordási döntési segédlet). Az említett cikkben ezt egészítik ki
+nem-vízszintes terepen történő haladásra, tehát pont arra, amire nekünk
+szükségünk van, és a nagyon jó, hogy mindezt egy átfogó irodalomkutatás
+alapján teszik. Ez alapján egy függvényt illesztettek[^3] az adatokra. A
+dologban egy extra van a Minettiéknél látott megoldáshoz képest:
+figyelembe veszi[^4] a sebesség hatását is. Valójában tehát az
+LCDA-modell az nem egy görbét jelent, hanem minden sebességhez egyet:
+
+``` r
+LCDAfun <- function(s, v = 1.39*3.6) 0.34*s*(1-1.05^(1-1.1^(s+32))) + 1.44/(v/3.6) +
+  1.94*(v/3.6)^(0.43-1) + 0.24*(v/3.6)^3
+EnergyData <- rbind(EnergyData,
+                    CJ(TYPE = "LCDA", SLOPE = seq(-0.45, 0.45, 0.01), SPEED = 2:7)[
+                      , .(TYPE, SLOPE, SPEED, Cw = LCDAfun(SLOPE*100, SPEED), CwSD = NA,
+                          lci = NA, uci = NA)])
+
+ggplot(EnergyData[TYPE=="Minetti"], aes(x = SLOPE*100, y = Cw, ymin = lci, ymax = uci)) +
+  geom_line() + geom_point() + geom_errorbar(width = 1) +
+  geom_line(data = EnergyData[TYPE=="LCDA"], aes(group = factor(SPEED), color = factor(SPEED))) +
+  labs(x = "Meredekség [%]", y = "Energiaigény [J/(kg m)]", color = "Sebesség [km/h]")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+Látszik, hogy az eredmény nagyjából hasonló a Minetti-görbéhez. Az ember
+akár arra is gondolhat, hogy mivel nekünk úgyis csak a relatív viszonyok
+fontosak, így igazából nincs is különbség. Ez azonban cseles: a relatív
+viszony most *hányadost* jelent (emlékezzünk vissza, a 10%-nál érvényes
+energiafelhasználást osztottuk a vízszintessel), azt pedig nagyon is
+befolyásolja az, ha azonosan eltoljuk felfelé vagy lefelé a görbét!
+Gondoljunk bele, a $\frac{2}{1}$ nem ugyanaz mint a $\frac{3}{2}$, a
+$\frac{4}{3}$ vagy épp az $\frac{1001}{1000}$. Az tehát, hogy az
+LCDA-modell nagyobb energiafelhasználást becsül a vízszinteshez is, azt
+fogja jelenteni, hogy – relatíve – kevésbé bünteti az emelkedést.
+(Ugyanazt a többletet nagyobb alappal osztjuk le.)
+
+Kérdés még, hogy mit válasszunk sebességnek: kicsit saját farkába harapó
+kígyóval van dolgunk, hiszen a sebességet mi majd pont kiszámolni
+akarjuk a legvégén. Talán a legjobb amit tehetünk, ha ugyanúgy járunk
+el, mint Minetti; ott az történt, hogy minden meredekségnél a minimális
+energiaigényt tüntették fel, másképp szólva az ott optimális sebességgel
+számoltak (csak ott nem kaptunk információt arról, hogy ez mi). Ezt az
+LCDA-ra is megtehetjük, sőt, a fent vázolt okból az eredmény nem is fog
+függeni a meredekségtől: mindig az 1,39 m/s lesz az optimális, tehát
+legkisebb 1 méterre vett energiaigényű sebesség; ez majdnem pontosan 5
+km/h. A kézi számolásra is alkalmas, egyszerűsített szabálynál, ezúttal
+is a 0 és 10%-os pontokkal számolva (a görbe szép egyenes a pozitív
+szakaszon, úgyhogy ennek a választásnak most sincs nagy jelentősége), a
+váltószám: 0.96 kilométer. Tehát teljesen hasonló szabályt kaptunk:
+minden 100 méter emelkedés egyenértékű 0.96 kilométer plusz (vízszintes)
+távval.
+
+E ponton muszáj megjegyeznem, hogy hatalmas küzdelem, futópadra rakott
+alanyok, spirometriás mérés, metaanalízis, függvényillesztés és
+matematikai modellezés alapján visszajutottunk oda, ahonnan indultunk:
+ugye Naismith 1892-ben 1 km/100 m átváltást javasolt… De nem akarom
+elviccelni a dolgot, ez igenis fontos eredmény, hiszen így racionálisan
+alátámasztva jutottunk el ide, úgy – és ez a talán még fontosabb – hogy
+a feltevések, levezetések explicitek voltak, vizsgálhatóak és
+ellenőrizhetőek.
+
+Egyébként a reális sebességek tartományán szerencsére nincs hatalmas
+jelentősége a sebességnek; az alábbi ábra mutatja a váltószám értékét a
+3 és 6 km/h közötti sebességekre:
+
+``` r
+ggplot(data.table(SPEED = seq(3, 6, 00.1))[, .(SPEED, ConvFactor = LCDAfun(10, SPEED)/LCDAfun(0, SPEED)-1)],
+       aes(x = SPEED, y = ConvFactor)) + geom_line() +
+  labs(x = "Sebesség [km/h]", y = "Váltószám [km / 100 m]")
+```
+
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+Ez persze az egyszerűsített szabály volt a kézi számoláshoz, a pontos
+értéket ugyanúgy meghatározhatjuk a függvény, és egy digitális térkép
+alapján.
+
+Ha már ennyit emlegettük, felvetődhet a kérdés, hogy mennyire jelent
+nagy problémát a kézi számolásra egyszerűsített szabály alkalmazása,
+tehát mi a teljesítménytúrák releváns meredekség-tartománya? Pozitív
+tartományban valószínűleg a 0-10% tartománnyal sem hibázunk nagyot, az
+meg, hogy a 35%-ig tartó nagyon pontosan egyenes tartományból, pláne,
+hogy a 45%-ig megadott teljes tartományból kifussunk, szinte
+elképzelhetetlen – nemhogy a teljesítménytúrák összességében, de még
+meredek részeikben is. A Pisztrángos-tó – Sötét-lápa nyereg – Kékestető,
+egy legendás teljesítménytúra legendás szakasza, 12,5% átlagos
+meredekségű, a Gerecse 50-en a Héreg sarkától a Z-ön felmenetel 11,4%, a
+Kiss Péter Emléktúrán a Markazi-vár – Kis-kő meredek része 16,4%, de ez
+már tényleg a legextrémebb példák közé tartozik a magyar
+teljesítménytúrák körében, legalábbis amivel én találkoztam. A negatív
+meredekség-tartományról nehezebb így információt szerezni, de itt
+alkalmazhatunk egy másik megközelítést, ami egyébként is szerencsésebb
+lehet: az előbbi példák arra vannak korlátozva, hogy az itinerben milyen
+pontok szerepelnek (az alapján számoltam ki én is a közölt
+meredekségeket), de ha van számítógépes térképünk, akkor ezt
+kiszámolhatjuk szinte tetszőlegesen sűrűn! És akkor tegyük meg ezt a
+Kinizsi 100-ra, hiszen így még relevánsabbak leszünk: épp a vizsgált
+túrára nézzük meg az előforduló meredekségeket.
 
 Szerencsére a túra útvonalát letölthetjük [GPX
 formátumban](https://funiq.hu/3216-kinizsi-sz%C3%A1zas-teljes%C3%ADtm%C3%A9nyt%C3%BAra)
@@ -430,7 +540,6 @@ K100gpxTrack <- K100gpxTrack[!(!is.na(DISTANCE)&DISTANCE==0&DIFFELEV==0)]
 K100gpxTrack$SLOPE <- K100gpxTrack$DIFFELEV/K100gpxTrack$DISTANCE
 K100gpxTrack$CUMDIST <- c(0, cumsum(K100gpxTrack$DISTANCE[-1]))
 K100gpxTrack$CUMPOSELEV <- c(0, cumsum(pmax(K100gpxTrack$DIFFELEV[-1], 0)))
-K100gpxTrack$Cw <- MinettiFun(K100gpxTrack$SLOPE)*K100gpxTrack$DISTANCE
 ```
 
 A meredekségek számításához nem ez lesz a szerencsés adatbázis, mert
@@ -453,7 +562,7 @@ ggplot(K100gpxTrack100MInterp, aes(x = SLOPE)) + geom_histogram(bins = 30) +
   geom_vline(xintercept = 0, color = "red") + labs(x = "Meredekség [%]", y = "Gyakoriság [db]")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 Látható, hogy a meredekségek még egy túrán belül nézve is (és elég
 finom, 100 méteres felbontásban haladva is) szinte kivétel nélkül -20%
@@ -461,48 +570,47 @@ finom, 100 méteres felbontásban haladva is) szinte kivétel nélkül -20%
 sem fog túl nagy hibát véteni: a pozitív tartományra tökéletesen
 működik, a negatívat ugyan figyelmen kívül hagyja, ezért valamelyest
 felülbecsült értéket, túl nagy egyenértékű távolságot fog adni, de ez a
-hatás vélhetően nem lesz túl nagy, hiszen 0 és -20% között a Minettiék
-által megadott függvény közel van a vízszinteshez.
+hatás vélhetően nem lesz túl nagy, hiszen 0 és -20% között a függvények
+közel vannak a vízszinteshez.
 
 Úgyhogy akkor számoljunk! Innentől, hogy betöltöttük a térképet, már nem
 okoz problémát, hogy gépi úton menjünk végig a túra útvonalán, és
 lépésről-lépésre, pontosan számoljuk az energiafelhasználást:
 
 ``` r
+K100gpxTrack$CwMinetti <- MinettiFun(K100gpxTrack$SLOPE)*K100gpxTrack$DISTANCE
+K100gpxTrack$CwLCDA <- LCDAfun(K100gpxTrack$SLOPE*100)*K100gpxTrack$DISTANCE
 truekms <- res[, .(TRUEKM = sort(unique(TRUEKM))), .(YEAR)]
 CwEkvs <- rbindlist(lapply(unique(truekms$YEAR), function(year) {
   idxs <- rep(sort(unique(res[YEAR==year]$KM))[-1],
               diff(c(0, sapply(2:nrow(truekms[YEAR==year]), function(i)
                 which.min(abs(K100gpxTrack$CUMDIST-truekms[YEAR==year][i]$TRUEKM*1000))))))
-  K100gpxTrack[,. (YEAR = year, CwEkv = sum(Cw, na.rm = TRUE)/MinettiFun(0)/1000), .(KM = idxs)]
+  K100gpxTrack[,. (YEAR = year,
+                   Naismith = (sum(DISTANCE, na.rm = TRUE) +
+                                 sum(pmax(DIFFELEV, 0)/100*1000, na.rm = TRUE))/1000,
+                   CwEkvMinetti = sum(CwMinetti, na.rm = TRUE)/MinettiFun(0)/1000,
+                   CwEkvLCDA = sum(CwLCDA, na.rm = TRUE)/LCDAfun(0)/1000), .(KM = idxs)]
 }))
 ```
 
-Csak az érdekesség kedvéért: ezen pontos számítással a Kinizsi 100
-„effektív hossza”, tehát azon vízszintes út hossza, aminek a
-teljesítésével egyenértékű (és most már azt is pontosan definiáltuk,
-hogy milyen értelemben: ugyanannyi energiát igényel!) egész pontosan
-153.5 kilométer. A Minetti-adatok alapján felálított egyszerűsített
-szabállyal egyébként 161.3 km lett volna, míg a Naismith-szabállyal
-132.1 km.
-
-Zárásként megjegyzendő, hogy a Minetti-adatok problémája, hogy mindössze
-10 tesztalany mérései alapján vették fel (szerencsére az energiaigény
-szórásai nagyon kicsik voltak), valamint, hogy mindegyikük fiatal,
-versenysportoló férfi volt. Ez utóbbi talán nem akkora nagy baj mint
-elsőre tűnhet, ugyanis mi itt csak a *relatív* viszonyokat használtuk
-fel, nem az abszolút számokat. Tehát igen, lehet, sőt, biztos, hogy a
-nem profi sportolók energiaigénye más, hogy a nőké más, stb. de
-remélhetőleg nagyjából *ugyanannyira más* 10%-os emelkedőn, mint
-vízszintesen. Lehet, hogy kétszer annyi az energiaigény, de ez
-egyáltalán nem baj, ha minden meredekség mellett kétszer annyi. (Az
-egész görbe el van tolódva, felfelé vagy lefelé, de arányosan
-mindenhol.) Ha így van, akkor egyáltalán semmilyen hibát nem vétünk;
-valószínűleg persze nincs tökéletesen így, de a hiba mindenesetre így is
-bizonyosan sokkal kisebb, mintha az abszolút számokat használnánk fel.
+Csak az érdekesség kedvéért: a Minetti-függvény alapján és pontos
+számítással a 2023-as Kinizsi 100 „effektív hossza”, tehát azon
+vízszintes út hossza, aminek a teljesítésével egyenértékű (és most már
+azt is pontosan definiáltuk, hogy milyen értelemben: ugyanannyi energiát
+igényel!) egész pontosan 153.5 kilométer, míg a Minetti-adatok alapján
+felálított egyszerűsített, kézi számolásra alkalmas szabállyal és nem
+digitális térkép, hanem az itiner használatával 156.1 kilométer (ahogy
+sejtettük, nagyobb, de nem sokkal). Az LCDA-modellel a pontos érték
+121.9 kilométer, a kézi számításra alkalmas egyszerűsített szabályával
+és nem digitális térképpel 128.3 kilométer. A Naismith-szabállyal 132.1
+kilométer a pontos és 129.5 kilométer az egyszerűsített érték (itt a
+kettő között csak a digitális térkép használata a különbség, hiszen a
+számolási szabály ugyanaz). Az LCDA tehát még kicsit kevesebbet is ad,
+mint a Naismith, szintén ahogy számítottunk rá (egy leheletnyit kisebb
+volt az egyszerűsített váltószáma).
 
 És akkor, ennyi rákészülés után, lássuk az eredményeket! A medián
-sebesség alakulása mindhárom számítási módszer szerint, 2022-ben és
+sebesség alakulása minden számítási módszer szerint, 2022-ben és
 2023-ban:
 
 ``` r
@@ -510,26 +618,42 @@ res <- merge(res, CwEkvs, by = c("YEAR", "KM"), all = TRUE)
 
 res$SPEEDEFFORTMINETTINAIV <- (res$KMDIFF + (res$TRUEASCENT/100*(MinettiFun(0.1)/MinettiFun(0)-1)))/
   (res$TIMEDIFF/(60*60))
-res$SPEEDEFFORTMINETTI <- (res$CwEkv)/(res$TIMEDIFF/(60*60))
+res$SPEEDEFFORTMINETTI <- (res$CwEkvMinetti)/(res$TIMEDIFF/(60*60))
+res$SPEEDEFFORTLCDANAIV <- (res$KMDIFF + (res$TRUEASCENT/100*(LCDAfun(10)/LCDAfun(0)-1)))/
+  (res$TIMEDIFF/(60*60))
+res$SPEEDEFFORTLCDA <- (res$CwEkvLCDA)/(res$TIMEDIFF/(60*60))
 
-ggplot(melt(res[, .(YEAR, TRUEKM, `Naismith` = SPEEDEFFORT,
-                    `Minetti (egyszerűsített)` = SPEEDEFFORTMINETTINAIV,
-                    `Minetti (pontos)` = SPEEDEFFORTMINETTI)],
-            id.vars = c("YEAR", "TRUEKM"))[, .(median(value)) , .(YEAR, TRUEKM, variable)],
-       aes(x = TRUEKM, y = V1, color = factor(YEAR), linetype = variable)) +
+temp <- melt(res[, .(YEAR, TRUEKM,
+                     `Naismith-egyszerűsített` = SPEEDEFFORT,
+                     `Naismith-pontos` = Naismith/(res$TIMEDIFF/(60*60)),
+                     `Minetti-egyszerűsített` = SPEEDEFFORTMINETTINAIV,
+                     `Minetti-pontos` = SPEEDEFFORTMINETTI,
+                     `LCDA-egyszerűsített` = SPEEDEFFORTLCDANAIV,
+                     `LCDA-pontos` = SPEEDEFFORTLCDA),], id.vars = c("YEAR", "TRUEKM"),
+             variable.factor = FALSE)
+temp$METRIC <- sapply(strsplit(temp$variable, "-"), `[[`, 1)
+temp$TYPE <- sapply(strsplit(temp$variable, "-"), `[[`, 2)
+
+ggplot(temp[, .(MedianSpeed = median(value)) , .(YEAR, TRUEKM, METRIC, TYPE)],
+       aes(x = TRUEKM, y = MedianSpeed, color = METRIC, linetype = TYPE)) + facet_wrap(~YEAR) +
   geom_line() + geom_point() +
-  labs(x = "Táv [km]", y = "Korrigált sebesség [km-effort/h]", color = "Év", linetype = "Módszer")
+  labs(x = "Táv [km]", y = "Korrigált sebesség [km-effort/h]", color = "Módszer",
+       linetype = "Számítási mód")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
-Azt látjuk, hogy az összkép a Minetti-módszerrel számolva is nagyon
-hasonló ahhoz, amit a Naismith-szabállyal kaptunk, csak épp magasabb
-számok szerepelnek. Lehetne ugyan még ennél is bonyolultabb szabályokat
-használni, de nem valószínű, hogy ennek túl sok értelme lenne, mert a
-pihenőidőkből fakadó, megfoghatatlan hiba vélhetően jóval nagyobb, mint
-ami abból fakad, hogy a szint figyelembevételét nem tökéletesen
-végeztük.
+Azt látjuk, hogy az összkép hasonló, csak a Minetti-módszer nagyobb
+értékeket ad. Az LCDA-modell és a Naismith-szabály azonban nagyon
+hasonló értékeket produkál. Végezetül pedig megállapítható, hogy a
+pontos (digitális térképet, és adott esetben teljes függvényt használó)
+és az egyszerűsített (itinert és kézi számításra egyszerűsített
+függvényt használó) számítási módok eredményei igen hasonlóak.
+
+Lehetne ugyan még ennél is bonyolultabb szabályokat használni, de nem
+valószínű, hogy ennek túl sok értelme lenne, mert a pihenőidőkből
+fakadó, megfoghatatlan hiba vélhetően jóval nagyobb, mint ami abból
+fakad, hogy a szint figyelembevételét nem tökéletesen végeztük.
 
 Mindez további elemzés tárgyát képezheti, mi azonban e kitérő után a
 továbbiakban visszatérünk a klasszikus módszerhez, és a korrigált
@@ -559,7 +683,7 @@ ggplot(melt(linfit, id.vars = "ID"), aes(x = value)) +
   labs(x = "", y = "Gyakoriság [fő]")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 Jól látszik a kezdőérték eloszlása, és az, hogy az abszolút túlnyomó
 többségnek tényleg csökkenő trendet mutatott a (korrigált) sebessége a
@@ -584,7 +708,7 @@ ggplot(resEffortWide[YEAR==2023], aes(x = `SPEEDEFFORT0-15`, y = `SPEEDEFFORT15-
   geom_abline(color = "red")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 Jól látszik, hogy a két szakaszon mért sebesség között nagyon szoros,
 pozitív – és szinte lineáris – volt a kapcsolat: aki az egyiken gyorsabb
@@ -603,7 +727,7 @@ GGally::ggpairs(temp, columnLabels = substring(colnames(temp), 12),
                 upper = list(continuous = GGally::wrap(GGally::ggally_cor, stars = FALSE)))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 Összességében tehát elmondható, hogy aki egy szakaszt az átlagnál
 gyorsabban teljesít, az valószínűleg bármely más szakaszt is az átlagnál
@@ -629,7 +753,7 @@ ggplot(resEffortWide[YEAR==2023], aes(x = `SPEEDEFFORT0-15`, y = as.numeric(SUCC
   labs(y = "Sikeres teljesítés valószínűsége [%]")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 A dolog egyfelől logikus, de talán azért kicsit meglepő is. Logikus,
 mert azt látjuk, hogy aki gyorsabban ment, az nagyobb valószínűséggel
@@ -664,7 +788,7 @@ ggplot(resEffortWide, aes(x = `SPEEDEFFORT0-15`, y = as.numeric(SUCCESS),
   labs(y = "Sikeres teljesítés valószínűsége [%]", color = "Év")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 Adná magát a kérdés, hogy miért nem nézünk meg további szakaszokat,
 vagy, ami még jobb, további szakaszokat *is*, azaz, miért nem becsüljük
@@ -701,7 +825,7 @@ hogy megengedjem a sebesség esetleges nemlineáris hatását.)
 ## Köszönetnyilvánítás
 
 Köszönöm Padisák Gábornak, hogy felhívta a figyelmemet a
-Minetti-módszerre.
+Minetti-módszerre és az LCDA-modellre.
 
 [^1]: A dolog tehát azon múlik, hogy lineárisnak feltételeztük az
     összefüggést a meredekség és az energiafelhasználás között. (A
@@ -728,9 +852,9 @@ Minetti-módszerre.
     kényelmessé az interpretációt, mert ha nem 1, hanem mondjuk 2
     kilométeren van 100 méter szintemelkedés, akkor is mondhatjuk, hogy
     átrendezzük úgy, hogy az első 1 kilométeren legyen – márpedig ahhoz
-    1,85 kilométer ekvivalens vízszintes táv tartozik. Tehát innentől
+    1.85 kilométer ekvivalens vízszintes táv tartozik. Tehát innentől
     mindegy is a távolság, joggal mondhatjuk, hogy a 100 méter
-    emelkedéshez magához tartozik a plusz 1,85 kilométer egyenértékű
+    emelkedéshez magához tartozik a plusz 1.85 kilométer egyenértékű
     távolság, függetlenül attól, hogy 100 méteren vagy 100 kilométeren
     van az a 100 méter emelkedés. Természetesen mindez csak addig igaz,
     amíg az energiaigény-függvény lineáris minden felmerülő emelkedésre.
@@ -749,3 +873,21 @@ Minetti-módszerre.
     találta](https://journals.physiology.org/doi/full/10.1152/japplphysiol.00546.2015).
     A dolognak azonban szinte semmi jelentősége, mert ilyen, 45%-nál
     nagyobb meredekségek úgysem igen fordulnak elő, pláne hosszabban.
+
+[^3]: A függvényforma elég nyakatekert, úgyhogy jobb híján hinnünk kell
+    a szerzőknek, hogy ezt értelmesen választották. Sajnos ilyen kevés
+    pont alapján, pláne ha ilyen komplexitású függvények is
+    szóbajöhetnek, nem sok esély van pusztán az adatok alapján
+    megtalálni a jó függvényformát, a túlilleszkedés problémája miatt.
+
+[^4]: Annyit azért meg kell jegyezni, hogy a függvényforma olyan az
+    LCDA-modellben, hogy az emelkedésnek magának hatása, értve ez alatt
+    az 1 méterhez – nem 1 másodperchez – szükséges energiaigényt, nem
+    függ a sebességtől! Tehát a görbe azért és annyival fut magasabban a
+    nagyobb sebességeknél, amiért és amennyivel vízszintesen is nagyobb
+    az energiaigény. De a különbség ugyanaz, minden meredekség mellett;
+    ez az ábrán is látható. Ez persze kérdés lehet, hogy valóban jó
+    modell-e, mindenesetre az LCDA-ban a függvényforma eleve így volt
+    specifikálva, tehát az adatok nem is mondhattak ennek ellent. Más
+    kérdés, hogy a szerzők szerint a függvényformát az adatokkal
+    összhangban választották meg.
