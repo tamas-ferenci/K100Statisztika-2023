@@ -577,7 +577,8 @@ Kezdésként nézzük meg a legelső két szakasz szóródási diagramját (piro
 az egyezőség vonala):
 
 ``` r
-ggplot(resEffortWide[YEAR==2023], aes(x = `SPEEDEFFORT0-15`, y = `SPEEDEFFORT15-25`)) + geom_jitter() +
+ggplot(resEffortWide[YEAR==2023], aes(x = `SPEEDEFFORT0-15`, y = `SPEEDEFFORT15-25`)) +
+  geom_point(position = position_jitter(seed = 1)) +
   labs(x = "Korrigált sebesség a 15 km-es ellenőrzőpontig [km-effort/h]",
        y = "Korrigált sebesség a 15 és 25 km-es\nellenőrzőpont között [km-effort/h]") +
   geom_abline(color = "red")
