@@ -341,11 +341,11 @@ hanem az egymáshoz való viszonyuk! Ugyanis 10%-os emelkedőn ugyanez az
 $\frac{\text{J}}{\text{kg}\cdot\text{m}}$. Tehát 1 km energiaigénye –
 maradva 70 kg-os embernél – vízszintesen $1000\cdot70\cdot 1.64$ kJ, de
 10%-os emelkedőn már $1000\cdot70\cdot 4.68$ kJ, azaz
-$1000\cdot70\cdot 4.68 - 1000\cdot70\cdot 1.64$ kJ-lal több. És most jön
-a lényeg: ezt a többletet átszámolhatjuk vízszintes távolságra! Hiszen
-vízszintesen minden kilométer $1000\cdot70\cdot 1.64$ kJ, azaz
-$1000\cdot70\cdot 4.68 - 1000\cdot70\cdot 1.64$ kJ többlet az épp
-$\frac{1000\cdot70\cdot 4.68 - 1000\cdot70\cdot 1.64}{1000\cdot70\cdot 1.64}$
+$1000\cdot70\cdot 4.68 -  1000\cdot70\cdot 1.64$ kJ-lal több. És most
+jön a lényeg: ezt a többletet átszámolhatjuk vízszintes távolságra!
+Hiszen vízszintesen minden kilométer $1000\cdot70\cdot 1.64$ kJ, azaz
+$1000\cdot70\cdot 4.68 -  1000\cdot70\cdot 1.64$ kJ többlet az épp
+$\frac{1000\cdot70\cdot 4.68 -  1000\cdot70\cdot 1.64}{1000\cdot70\cdot 1.64}$
 vízszintes kilométerrel egyenértékű! A számolásból ráadásul az is
 látszik, hogy ez az eredmény szerencsére nem függ attól, hogy milyen
 távolsággal, és milyen tömegű emberrel számoltunk, tehát valóban egy
